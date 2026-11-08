@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.claude
+plans
+*.md
+!README.md
+Screenshot*
+Dockerfile
+.dockerignore
+cloudbuild.yaml
