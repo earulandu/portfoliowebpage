@@ -23,3 +23,9 @@ What happened: Claude read my answers in `QUESTIONS.md`, the resume screenshot i
 - Ran `npm run lint` and `npm run build` (both pass), then started the production server. Its first headless Chrome screenshots looked cut off at 375 px because headless Chrome has a minimum window width, so it re-checked with the Chrome DevTools protocol at exact widths. That check found no horizontal overflow at 375, 768 or 1440 px on any page.
 - Added the `Dockerfile` (standalone, port 8080) and `cloudbuild.yaml` (build, push to Artifact Registry, deploy with min 0 / max 1 instances) for auto-deploy on push to `main`, and updated the README and CLAUDE.md.
 - Kept the resume screenshot out of git.
+
+**Go live (same prompt):**
+- Claude committed the build and created the **public** repo `earulandu/portfoliowebpage` with `gh repo create`, then pushed `main`.
+- It tried to create the Cloud Build push trigger with `gcloud builds triggers create github`. That failed with `Repository mapping does not exist`: the new repo has to be connected to the Cloud Build GitHub App once in the Cloud Console, which only I can authorize.
+- To get the site live meanwhile, Claude ran the same `cloudbuild.yaml` by hand with `gcloud builds submit`. The first run failed because nested substitutions like `${PROJECT_ID}` inside `_IMAGE` need `dynamicSubstitutions: true`. Claude added that option, and the second run succeeded in 2m36s.
+- Live at https://portfoliowebpage-431359973440.us-central1.run.app. `/`, `/projects`, `/skills`, `/contact` and `/api/health` all return 200, max instances is 1 and min is 0. The IA 3 `portfolio` service still returns 200 and was not touched.
